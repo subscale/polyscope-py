@@ -61,6 +61,55 @@ void bind_curve_network(py::module& m) {
     .def("set_cull_whole_elements", &ps::CurveNetwork::setCullWholeElements, "Set cull whole elements")
     .def("get_cull_whole_elements", &ps::CurveNetwork::getCullWholeElements, "Get cull whole elements")
 
+    .def("set_transform", [](ps::CurveNetwork& self, const Eigen::Matrix<float, 4, 4>& xform) {
+        glm::mat4 mat4;
+        mat4[0][0] = xform(0,0);
+        mat4[0][1] = xform(1,0);
+        mat4[0][2] = xform(2,0);
+        mat4[0][3] = xform(3,0);
+
+        mat4[1][0] = xform(0,1);
+        mat4[1][1] = xform(1,1);
+        mat4[1][2] = xform(2,1);
+        mat4[1][3] = xform(3,1);
+
+        mat4[2][0] = xform(0,2);
+        mat4[2][1] = xform(1,2);
+        mat4[2][2] = xform(2,2);
+        mat4[2][3] = xform(3,2);
+
+        mat4[3][0] = xform(0,3);
+        mat4[3][1] = xform(1,3);
+        mat4[3][2] = xform(2,3);
+        mat4[3][3] = xform(3,3);
+
+        self.setTransform(mat4);
+    })
+
+    .def("get_transform", [](ps::CurveNetwork& self) {
+        const auto mat4 = self.getTransform();
+        Eigen::Matrix<float, 4, 4> xform;
+
+        xform(0,0) = mat4[0][0];
+        xform(1,0) = mat4[0][1];
+        xform(2,0) = mat4[0][2];
+        xform(3,0) = mat4[0][3];
+        xform(0,1) = mat4[1][0];
+        xform(1,1) = mat4[1][1];
+        xform(2,1) = mat4[1][2];
+        xform(3,1) = mat4[1][3];
+        xform(0,2) = mat4[2][0];
+        xform(1,2) = mat4[2][1];
+        xform(2,2) = mat4[2][2];
+        xform(3,2) = mat4[2][3];
+        xform(0,3) = mat4[3][0];
+        xform(1,3) = mat4[3][1];
+        xform(2,3) = mat4[3][2];
+        xform(3,3) = mat4[3][3];
+
+        return xform;
+    })
+
 
     // quantities
     .def("add_node_color_quantity", &ps::CurveNetwork::addNodeColorQuantity<Eigen::MatrixXd>, "Add a color function at nodes",

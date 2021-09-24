@@ -59,6 +59,58 @@ void bind_volume_mesh(py::module& m) {
       .def("set_material", &ps::VolumeMesh::setMaterial, "Set material")
       .def("get_material", &ps::VolumeMesh::getMaterial, "Get material")
 
+      .def("set_transform",
+           [](ps::VolumeMesh& self, const Eigen::Matrix<float, 4, 4>& xform) {
+             glm::mat4 mat4;
+             mat4[0][0] = xform(0, 0);
+             mat4[0][1] = xform(1, 0);
+             mat4[0][2] = xform(2, 0);
+             mat4[0][3] = xform(3, 0);
+
+             mat4[1][0] = xform(0, 1);
+             mat4[1][1] = xform(1, 1);
+             mat4[1][2] = xform(2, 1);
+             mat4[1][3] = xform(3, 1);
+
+             mat4[2][0] = xform(0, 2);
+             mat4[2][1] = xform(1, 2);
+             mat4[2][2] = xform(2, 2);
+             mat4[2][3] = xform(3, 2);
+
+             mat4[3][0] = xform(0, 3);
+             mat4[3][1] = xform(1, 3);
+             mat4[3][2] = xform(2, 3);
+             mat4[3][3] = xform(3, 3);
+
+             self.setTransform(mat4);
+           })
+
+      .def("get_transform",
+           [](ps::VolumeMesh& self) {
+             const auto mat4 = self.getTransform();
+             Eigen::Matrix<float, 4, 4> xform;
+
+             xform(0, 0) = mat4[0][0];
+             xform(1, 0) = mat4[0][1];
+             xform(2, 0) = mat4[0][2];
+             xform(3, 0) = mat4[0][3];
+             xform(0, 1) = mat4[1][0];
+             xform(1, 1) = mat4[1][1];
+             xform(2, 1) = mat4[1][2];
+             xform(3, 1) = mat4[1][3];
+             xform(0, 2) = mat4[2][0];
+             xform(1, 2) = mat4[2][1];
+             xform(2, 2) = mat4[2][2];
+             xform(3, 2) = mat4[2][3];
+             xform(0, 3) = mat4[3][0];
+             xform(1, 3) = mat4[3][1];
+             xform(2, 3) = mat4[3][2];
+             xform(3, 3) = mat4[3][3];
+
+             return xform;
+           })
+
+
       // slice planes
       .def("set_ignore_slice_plane", &ps::VolumeMesh::setIgnoreSlicePlane, "Set ignore slice plane")
       .def("get_ignore_slice_plane", &ps::VolumeMesh::getIgnoreSlicePlane, "Get ignore slice plane")
