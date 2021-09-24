@@ -6,9 +6,14 @@
 #include "Eigen/Dense"
 
 #include "polyscope/affine_remapper.h"
+#include "polyscope/curve_network.h"
+#include "polyscope/pick.h"
+#include "polyscope/point_cloud.h"
 #include "polyscope/polyscope.h"
+#include "polyscope/surface_mesh.h"
 #include "polyscope/surface_parameterization_enums.h"
 #include "polyscope/view.h"
+#include "polyscope/volume_mesh.h"
 
 namespace py = pybind11;
 namespace ps = polyscope;
@@ -23,6 +28,7 @@ void bind_surface_mesh(py::module& m);
 void bind_point_cloud(py::module& m);
 void bind_curve_network(py::module& m);
 void bind_volume_mesh(py::module& m);
+void bind_imgui(py::module& m);
 
 // Actual binding code
 // clang-format off
@@ -32,14 +38,20 @@ PYBIND11_MODULE(polyscope_bindings, m) {
   
   // === Basic flow 
   m.def("init", &ps::init, py::arg("backend")="", "Initialize Polyscope");
-  m.def("show", [](size_t forFrames) {
+  m.def("show", [](size_t forFrames, const py::object &cb ) {
         // use a callback to check for signals like ctrl-C
         ps::options::openImGuiWindowForUserCallback = false;
-        auto f = []() { if (PyErr_CheckSignals() != 0) throw py::error_already_set(); };
+        auto f = [&]() { 
+          if (!cb.is_none()) {
+            cb();
+          }
+          if (PyErr_CheckSignals() != 0) throw py::error_already_set();
+        };
         ps::state::userCallback = f;
         ps::show(forFrames);
       },
-      py::arg("forFrames")=std::numeric_limits<size_t>::max()
+      py::arg("forFrames")=std::numeric_limits<size_t>::max(),
+      py::arg("cb")=py::none()
   );
 
   // === Structure management
@@ -73,7 +85,34 @@ PYBIND11_MODULE(polyscope_bindings, m) {
       ps::view::lookAt(location, target, upDir, flyTo); 
   });
 
-  
+  // === Pick
+  m.def("have_selection", [](){ return ps::pick::haveSelection();});
+  m.def("get_selection", [](){
+    const auto selection = ps::pick::getSelection();
+    const auto * structure = std::get<0>(selection);
+    if (structure == nullptr) {
+      return std::make_tuple(std::string(), size_t{0});
+    }
+    return std::make_tuple(structure->name, std::get<1>(selection));
+  });
+  m.def("set_selection", [](const std::string &name, size_t index){
+    for(const auto &structureTypeName : std::array<std::string, 4>{
+      ps::PointCloud::structureTypeName,
+      ps::CurveNetwork::structureTypeName,
+      ps::SurfaceMesh::structureTypeName,
+      ps::VolumeMesh::structureTypeName
+    }) {
+      if (ps::hasStructure(structureTypeName, name)) {
+        auto * structure = ps::getStructure(structureTypeName, name);
+        ps::pick::setSelection(std::make_pair(structure, index));
+        break;
+      }
+    }
+    
+    
+  });
+
+
   // === Messages
   m.def("info", ps::info, "Send an info message");
   m.def("warning", ps::warning, "Send a warning message");
@@ -192,6 +231,7 @@ PYBIND11_MODULE(polyscope_bindings, m) {
   bind_point_cloud(m);
   bind_curve_network(m);
   bind_volume_mesh(m);
+  bind_imgui(m);
 
 }
 
