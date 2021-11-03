@@ -3,8 +3,13 @@ import sys
 import os.path as path
 
 # Path to where the bindings live
-sys.path.append(os.path.join(os.path.dirname(__file__), "../build/"))
-sys.path.append(os.path.join(os.path.dirname(__file__), "../src/"))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src")))
+if os.name == 'nt': # if Windows
+    # handle default location where VS puts binary
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "build", "Debug")))
+else:
+    # normal / unix case
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "build")))
 
 import polyscope
 import potpourri3d as pp3d
@@ -59,7 +64,7 @@ def main():
 
     ## Examples with a point cloud
     if True:
-        ps_points = polyscope.register_point_cloud("test points", verts)
+        ps_points = polyscope.register_point_cloud("test points", verts, point_render_mode='sphere')
 
         # Scalar functions
         ps_points.add_scalar_quantity("X", verts[:,0])

@@ -59,6 +59,9 @@ class TestCore(unittest.TestCase):
         ps.set_up_dir("z_up")
         ps.set_up_dir("neg_z_up")
         
+        ps.set_view_projection_mode("orthographic")
+        ps.set_view_projection_mode("perspective")
+        
         ps.show(3)
     
         ps.set_up_dir("y_up")
@@ -218,6 +221,12 @@ class TestPointCloud(unittest.TestCase):
         p.set_radius(0.01)
         p.set_radius(0.1, relative=False)
         self.assertAlmostEqual(0.1, p.get_radius())
+       
+        # Render mode
+        p.set_point_render_mode("sphere")
+        self.assertEqual("sphere", p.get_point_render_mode())
+        p.set_point_render_mode("quad")
+        self.assertEqual("quad", p.get_point_render_mode())
         
         # Color
         color = (0.3, 0.3, 0.5)
@@ -702,9 +711,13 @@ class TestSurfaceMesh(unittest.TestCase):
         self.assertEqual("candy", p.get_material())
         p.set_material("clay")
         
-        # Back face policy
+        # Back face 
         p.set_back_face_policy("different")
         self.assertEqual("different", p.get_back_face_policy())
+        p.set_back_face_policy("custom")
+        self.assertEqual("custom", p.get_back_face_policy())
+        p.set_back_face_color((0.25, 0.25, 0.25))
+        self.assertEqual((0.25, 0.25, 0.25), p.get_back_face_color())
         p.set_back_face_policy("cull")
         
         # Transparency
@@ -714,8 +727,7 @@ class TestSurfaceMesh(unittest.TestCase):
         # Set with optional arguments 
         p2 = ps.register_surface_mesh("test_mesh", self.generate_verts(), self.generate_faces(), 
                     enabled=True, material='wax', color=(1., 0., 0.), edge_color=(0.5, 0.5, 0.5), 
-                    smooth_shade=True, edge_width=0.5, back_face_policy="cull",
-                    transparency=0.9)
+                    smooth_shade=True, edge_width=0.5, back_face_policy="cull", back_face_color=(0.1, 0.1, 0.1), transparency=0.9)
         
         # Make sure shadows work
         ps.set_ground_plane_mode("shadow_only")

@@ -1,6 +1,6 @@
 import polyscope_bindings as psb
 
-from polyscope.core import str_to_datatype, str_to_vectortype, glm3
+from polyscope.core import str_to_datatype, str_to_vectortype, glm3, str_to_point_render_mode, point_render_mode_to_str
 
 
 class PointCloud:
@@ -74,6 +74,12 @@ class PointCloud:
 
     def get_transparency(self):
         return self.bound_cloud.get_transparency()
+    
+    # Point render mode
+    def set_point_render_mode(self, val):
+        self.bound_cloud.set_point_render_mode(str_to_point_render_mode(val))
+    def get_point_render_mode(self):
+        return point_render_mode_to_str(self.bound_cloud.get_point_render_mode())
 
     # Slice planes
     def set_cull_whole_elements(self, val):
@@ -210,15 +216,7 @@ class PointCloud:
             q.set_color(glm3(color))
 
 
-def register_point_cloud(
-    name,
-    points,
-    enabled=None,
-    radius=None,
-    color=None,
-    material=None,
-    transparency=None,
-):
+def register_point_cloud(name, points, enabled=None, radius=None, point_render_mode=None, color=None, material=None, transparency=None):
     """Register a new point cloud"""
 
     p = PointCloud(name, points)
@@ -228,6 +226,8 @@ def register_point_cloud(
         p.set_enabled(enabled)
     if radius is not None:
         p.set_radius(radius)
+    if point_render_mode is not None:
+        p.set_point_render_mode(point_render_mode)
     if color is not None:
         p.set_color(color)
     if material is not None:

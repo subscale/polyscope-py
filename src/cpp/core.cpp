@@ -154,6 +154,8 @@ PYBIND11_MODULE(polyscope_bindings, m) {
   });
 
 
+  m.def("set_view_projection_mode", [](ps::ProjectionMode x) { ps::view::projectionMode = x; });
+  
   // === Messages
   m.def("info", ps::info, "Send an info message");
   m.def("warning", ps::warning, "Send a warning message");
@@ -208,6 +210,11 @@ PYBIND11_MODULE(polyscope_bindings, m) {
     .value("arcball", ps::view::NavigateStyle::Arcball)
     .export_values(); 
   
+  py::enum_<ps::ProjectionMode>(m, "ProjectionMode")
+    .value("perspective", ps::ProjectionMode::Perspective)
+    .value("orthographic", ps::ProjectionMode::Orthographic)
+    .export_values(); 
+  
   py::enum_<ps::view::UpDir>(m, "UpDir")
     .value("x_up", ps::view::UpDir::XUp)
     .value("y_up", ps::view::UpDir::YUp)
@@ -243,6 +250,7 @@ PYBIND11_MODULE(polyscope_bindings, m) {
   py::enum_<ps::BackFacePolicy>(m, "BackFacePolicy")
     .value("identical", ps::BackFacePolicy::Identical)
     .value("different", ps::BackFacePolicy::Different)
+    .value("custom", ps::BackFacePolicy::Custom)
     .value("cull", ps::BackFacePolicy::Cull)
     .export_values(); 
   
@@ -257,6 +265,11 @@ PYBIND11_MODULE(polyscope_bindings, m) {
     .value("none", ps::TransparencyMode::None)
     .value("simple", ps::TransparencyMode::Simple)
     .value("pretty", ps::TransparencyMode::Pretty)
+    .export_values(); 
+  
+  py::enum_<ps::PointRenderMode>(m, "PointRenderMode")
+    .value("sphere", ps::PointRenderMode::Sphere)
+    .value("quad", ps::PointRenderMode::Quad)
     .export_values(); 
 
   // === Mini bindings for a little bit of glm

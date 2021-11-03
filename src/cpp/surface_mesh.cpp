@@ -90,6 +90,8 @@ void bind_surface_mesh(py::module& m) {
       .def("get_material", &ps::SurfaceMesh::getMaterial, "Get material")
       .def("set_back_face_policy", &ps::SurfaceMesh::setBackFacePolicy, "Set back face policy")
       .def("get_back_face_policy", &ps::SurfaceMesh::getBackFacePolicy, "Get back face policy")
+      .def("set_back_face_color", &ps::SurfaceMesh::setBackFaceColor, "Set back face color")
+      .def("get_back_face_color", &ps::SurfaceMesh::getBackFaceColor, "Get back face color")
 
       .def("set_transform",
            [](ps::SurfaceMesh& self, const Eigen::Matrix<float, 4, 4>& xform) {

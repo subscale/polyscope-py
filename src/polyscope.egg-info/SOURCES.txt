@@ -1107,7 +1107,6 @@ deps/polyscope/examples/demo-app/simple_dot_mesh_parser.cpp
 deps/polyscope/examples/demo-app/simple_dot_mesh_parser.h
 deps/polyscope/include/polyscope/affine_remapper.h
 deps/polyscope/include/polyscope/affine_remapper.ipp
-deps/polyscope/include/polyscope/brep.h
 deps/polyscope/include/polyscope/camera_parameters.h
 deps/polyscope/include/polyscope/color_management.h
 deps/polyscope/include/polyscope/colors.h
@@ -1122,6 +1121,7 @@ deps/polyscope/include/polyscope/disjoint_sets.h
 deps/polyscope/include/polyscope/file_helpers.h
 deps/polyscope/include/polyscope/histogram.h
 deps/polyscope/include/polyscope/image_scalar_artist.h
+deps/polyscope/include/polyscope/internal.h
 deps/polyscope/include/polyscope/messages.h
 deps/polyscope/include/polyscope/options.h
 deps/polyscope/include/polyscope/persistent_value.h
@@ -1208,7 +1208,6 @@ deps/polyscope/misc/material_images/image2material.cpp
 deps/polyscope/misc/material_images/imagesrgb2material.cpp
 deps/polyscope/misc/material_images/render_material.blend
 deps/polyscope/src/CMakeLists.txt
-deps/polyscope/src/brep.cpp
 deps/polyscope/src/camera_parameters.cpp
 deps/polyscope/src/color_management.cpp
 deps/polyscope/src/curve_network.cpp
@@ -1219,6 +1218,7 @@ deps/polyscope/src/disjoint_sets.cpp
 deps/polyscope/src/file_helpers.cpp
 deps/polyscope/src/histogram.cpp
 deps/polyscope/src/image_scalar_artist.cpp
+deps/polyscope/src/internal.cpp
 deps/polyscope/src/messages.cpp
 deps/polyscope/src/options.cpp
 deps/polyscope/src/persistent_value.cpp

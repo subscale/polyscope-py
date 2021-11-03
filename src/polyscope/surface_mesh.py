@@ -192,6 +192,12 @@ class SurfaceMesh:
 
     def get_back_face_policy(self):
         return back_face_policy_to_str(self.bound_mesh.get_back_face_policy())
+    
+    # Back face color
+    def set_back_face_color(self, val):
+        self.bound_mesh.set_back_face_color(glm3(val))
+    def get_back_face_color(self):
+        return self.bound_mesh.get_back_face_color().as_tuple()
 
     ## Permutations and bases
 
@@ -602,19 +608,8 @@ class SurfaceMesh:
             q.set_ribbon_enabled(ribbon)
 
 
-def register_surface_mesh(
-    name,
-    vertices,
-    faces,
-    enabled=None,
-    color=None,
-    edge_color=None,
-    smooth_shade=None,
-    edge_width=None,
-    material=None,
-    back_face_policy=None,
-    transparency=None,
-):
+def register_surface_mesh(name, vertices, faces, enabled=None, color=None, edge_color=None, smooth_shade=None, 
+                          edge_width=None, material=None, back_face_policy=None, back_face_color=None, transparency=None):
     """Register a new surface mesh"""
 
     p = SurfaceMesh(name, vertices, faces)
@@ -634,6 +629,8 @@ def register_surface_mesh(
         p.set_material(material)
     if back_face_policy is not None:
         p.set_back_face_policy(back_face_policy)
+    if back_face_color is not None:
+        p.set_back_face_color(back_face_color)
     if transparency is not None:
         p.set_transparency(transparency)
 
