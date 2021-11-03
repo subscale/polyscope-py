@@ -22,7 +22,6 @@ namespace ps = polyscope;
 template <typename... Args>
 using overload_cast_ = pybind11::detail::overload_cast_impl<Args...>;
 
-
 // Forward-declare bindings from other files
 void bind_surface_mesh(py::module& m);
 void bind_point_cloud(py::module& m);
@@ -56,6 +55,48 @@ PYBIND11_MODULE(polyscope_bindings, m) {
 
   // === Structure management
   m.def("remove_all_structures", &ps::removeAllStructures, "Remove all structures from polyscope");
+  m.def("get_all_structure_names", [](){
+    auto names = std::vector<std::string>();
+    for(const auto &entry : ps::state::structures) {
+      names.emplace_back(entry.first);
+    }
+    return names;
+  });
+  m.def("get_structure_category_count", [](const char *category_name){
+    auto it = ps::state::structures.find(category_name);
+    if (it == ps::state::structures.end()) {
+      return size_t{0};
+    }
+    return it->second.size();
+  });
+  m.def("get_structure_category_names", [](const char *category_name){
+    auto it = ps::state::structures.find(category_name);
+    if (it == ps::state::structures.end()) {
+      return std::vector<std::string>();
+    }
+    auto names = std::vector<std::string>();
+    for(const auto &entry : it->second) {
+      names.emplace_back(entry.first);
+    }
+    return names;
+  });
+
+  m.def("set_show_structures_ui", [](bool v) {
+    ps::options::showStructuresUi = v;
+  },
+  py::arg("v"));
+
+  m.def("get_show_structures_ui", []() {
+    return ps::options::showStructuresUi;
+  });
+
+  m.def("get_view_size", []() {
+    return std::make_tuple(ps::view::windowWidth, ps::view::windowHeight);
+  });
+
+  m.def("get_length_scale", []() {
+    return ps::state::lengthScale;
+  });
   
   // === Screenshots
   m.def("screenshot", overload_cast_<bool>()(&ps::screenshot), "Take a screenshot");

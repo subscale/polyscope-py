@@ -19,6 +19,7 @@ pybind11_add_module(polyscope_bindings
   src/cpp/curve_network.cpp
   src/cpp/volume_mesh.cpp
 )
+target_compile_features(polyscope_bindings PUBLIC cxx_std_17)
 
 target_include_directories(polyscope_bindings PUBLIC "${EIGEN3_INCLUDE_DIR}")
 target_link_libraries(polyscope_bindings PRIVATE polyscope)

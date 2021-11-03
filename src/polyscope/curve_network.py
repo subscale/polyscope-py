@@ -79,10 +79,10 @@ class CurveNetwork:
         if xform.shape[0] != 4 or xform.shape[1] != 4:
             raise ValueError("set_transform requires a 4x4 matrix")
 
-        self.bound_cloud.set_transform(xform)
+        self.bound_network.set_transform(xform)
 
     def get_transform(self):
-        return self.bound_cloud.get_transform()
+        return self.bound_network.get_transform()
 
     ## Structure management
 
